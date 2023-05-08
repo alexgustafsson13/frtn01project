@@ -27,7 +27,7 @@ public class Control {
 
     //Both errors should be between [-pi, pi]
     
-    u = 0; // math here
+    double u = 0.0; // math here
     return u;
   }
 
@@ -45,7 +45,7 @@ public class Control {
 
     //Both errors should be between [-pi, pi]
     
-    u = 0; // math here
+    double u = 0.0; // math here
     return u;
   }
 

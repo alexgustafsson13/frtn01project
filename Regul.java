@@ -3,10 +3,10 @@ public class Regul extends Thread {
 
   private Control controller; 
   //private GUI gui;
-  private Param p;
   private SimFurutaPendulum sim;
   private String mode = "OFF"; //"OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
 
+  private double u = 0;
   private double uMin = -1.0;
 	private double uMax = 1.0;
 
@@ -32,6 +32,7 @@ public class Regul extends Thread {
 	}  
 
   public void run() {
+    long duration;
     long t = System.currentTimeMillis();
     
     while (true) {
@@ -45,11 +46,11 @@ public class Regul extends Thread {
           break;
         }
         case "UPPER": {
-          double u = limit(controller.upperCalculate(penAngle, armAngle), uMin, uMax);
+          u = limit(controller.upperCalculate(penAngle, armAngle), uMin, uMax);
           break;
         }
         case "LOWER": {
-          double u = limit(controller.lowerCalculate(penAngle, armAngle), uMin, uMax);
+          u = limit(controller.lowerCalculate(penAngle, armAngle), uMin, uMax);
           break;
         }
         default: {
