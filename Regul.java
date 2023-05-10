@@ -4,11 +4,13 @@ public class Regul extends Thread {
   private Control controller; 
   //private GUI gui;
   private SimFurutaPendulum sim;
-  private String mode = "OFF"; //"OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
+  private Mode mode = Mode.OFF; //"OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
 
   private double u = 0;
   private double uMin = -1.0;
 	private double uMax = 1.0;
+  private Parameters param;
+  private RefParameters refparam;
 
   public Regul(Control c, /*GUI g,*/ SimFurutaPendulum s) {
     this.controller = c;
@@ -17,9 +19,16 @@ public class Regul extends Thread {
 
   }
 
-  public String getMode(String mode) {
-    //reutrn gui.getMode
-    return "UPPER";
+  public void setParameters(Parameters param) {
+    this.param = (Parameters) param.clone();
+  }
+
+  public void setRefParameters(RefParameters refparam) {
+    this.refparam = (RefParameters) refparam.clone();
+  }
+
+  public void setMode(Mode mode) {
+    this.mode = mode;
   }
 
 	private double limit(double u, double umin, double umax) {
@@ -30,6 +39,10 @@ public class Regul extends Thread {
 		}
 		return u;
 	}  
+
+  public void shutDown() {
+    System.out.println("shuting down");
+  }
 
   public void run() {
     long duration;

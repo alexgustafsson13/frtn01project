@@ -1,5 +1,4 @@
 
-
 public class Main {
   public static void main(String[] args) {
     //start sim
@@ -7,9 +6,12 @@ public class Main {
 
 
     Control controller = new Control();
-    //GUI gui = new GUI();
+    Regul regul = new Regul(controller, sim);
 
-    Regul regul = new Regul(controller, /*gui,*/ sim);
+    Parameters param = new Parameters();
+    RefParameters refparam = new RefParameters();
+    GUI gui = new GUI(param, refparam, regul);
+    gui.initializeGUI();
 
     //gui.start();
     regul.start();
