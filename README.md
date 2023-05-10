@@ -1,7 +1,7 @@
 # frtn01project
 
-compile: 'javac -cp furuta.jar *.java'
+compile: 'javac -cp regler.jar:furuta.jar *.java'
 
-run: 'java -cp .:furuta.jar Main'
+run: 'java -cp .:furuta.jar:regler.jar Main'
 
 (Linux)
