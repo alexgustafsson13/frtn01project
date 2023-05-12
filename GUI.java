@@ -74,14 +74,14 @@ public class GUI {
 		// Create panels for the parameter fields and labels, add labels and fields 
 		parPanel = new BoxPanel(BoxPanel.HORIZONTAL);
 		parLabelPanel = new JPanel();
-		parLabelPanel.add(new JLabel("K1: "));
+		parLabelPanel.add(new JLabel("K1(Swingup): "));
 		parLabelPanel.setLayout(new GridLayout(0,1));
-		parLabelPanel.add(new JLabel("K2: "));
-		parLabelPanel.add(new JLabel("Phi1: "));
-		parLabelPanel.add(new JLabel("Phi2: "));
-		parLabelPanel.add(new JLabel("PhiSpeed: "));
-		parLabelPanel.add(new JLabel("RefPhi1: "));
-		parLabelPanel.add(new JLabel("RefPhi2: "));
+		parLabelPanel.add(new JLabel("K2(Swingup): "));
+		parLabelPanel.add(new JLabel("Phi1(Threshold): "));
+		parLabelPanel.add(new JLabel("Phi2(Threshold): "));
+		parLabelPanel.add(new JLabel("PhiSpeed(Angular velocity): "));
+		parLabelPanel.add(new JLabel("RefPhi1(Lower): "));
+		parLabelPanel.add(new JLabel("RefPhi2(Upper): "));
 		parFieldPanel = new JPanel();
 		parFieldPanel.setLayout(new GridLayout(0,1));
         parFieldPanel.add(parK1Field);
