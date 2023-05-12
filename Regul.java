@@ -56,16 +56,16 @@ public class Regul extends Thread {
       double penAngle = sim.getThetaAngle();
       double armAngle = sim.getPhiAngle();
 
-      switch ("UPPER" /* gui.getMode() */) {
-        case "OFF": {
+      switch (mode) {
+        case OFF: {
           sim.setControlSignal(0);
           break;
         }
-        case "UPPER": {
+        case UPPER: {
           u = limit(controller.upperCalculate(penAngle, armAngle), uMin, uMax);
           break;
         }
-        case "LOWER": {
+        case LOWER: {
           u = limit(controller.lowerCalculate(penAngle, armAngle), uMin, uMax);
           break;
         }
