@@ -46,7 +46,7 @@ public class GUI {
 	private JRadioButton offModeButton = new JRadioButton("Off");
 	private JRadioButton upperModeButton = new JRadioButton("Upper");
 	private JRadioButton lowerModeButton = new JRadioButton("Lower");
-	private JButton stopButton = new JButton("STOP");
+	private JButton quitButton = new JButton("QUIT");
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
@@ -202,7 +202,7 @@ public class GUI {
                 regul.setMode(Mode.UPPER);
 			}
 		});
-		stopButton.addActionListener(new ActionListener() {
+		quitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
                 //ctrlPanel.stopThread();
@@ -226,7 +226,7 @@ public class GUI {
 		leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.add(somePanel, BorderLayout.CENTER);
-		leftPanel.add(stopButton, BorderLayout.SOUTH);
+		leftPanel.add(quitButton, BorderLayout.SOUTH);
 
 		// Create panel for the entire GUI.
 		guiPanel = new BoxPanel(BoxPanel.HORIZONTAL);
