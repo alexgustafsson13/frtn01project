@@ -22,7 +22,13 @@ public class Control {
   }
 
   public synchronized void updateParams(Parameters param) {
+    this.k1 = param.k1;
+    this.k2 = param.k2;
+  }
 
+  public synchronized void updateRefParams(RefParameters refParam) {
+    this.armRef = refParam.phi1;
+    this.penRef = refParam.phi2;
   }
 
   public synchronized double lowerCalculate(double penAngle, double armAngle) {
@@ -44,7 +50,7 @@ public class Control {
     if (Math.abs(penError) < 0.2 && Math.abs(deltaPhi) < 0.1) {
       u = 0.0; // math here
     } else {
-      u 0.0;
+      u = 0.0;
     }
     oldTheta = penAngle;
     return u;

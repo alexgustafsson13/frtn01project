@@ -1,26 +1,26 @@
 public class Regul extends Thread {
-  
 
-  private Control controller; 
-  //private GUI gui;
+  private Control controller;
+  // private GUI gui;
   private SimFurutaPendulum sim;
-  private Mode mode = Mode.OFF; //"OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
+  private Mode mode = Mode.OFF; // "OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
 
   private double u = 0;
   private double uMin = -1.0;
-	private double uMax = 1.0;
+  private double uMax = 1.0;
   private Parameters param;
   private RefParameters refparam;
 
-  public Regul(Control c, /*GUI g,*/ SimFurutaPendulum s) {
+  public Regul(Control c, /* GUI g, */ SimFurutaPendulum s) {
     this.controller = c;
-    //this.gui = g;
+    // this.gui = g;
     this.sim = s;
 
   }
 
   public void setParameters(Parameters param) {
     this.param = (Parameters) param.clone();
+    c.updateParams(this.param);
   }
 
   public void setRefParameters(RefParameters refparam) {
@@ -31,14 +31,14 @@ public class Regul extends Thread {
     this.mode = mode;
   }
 
-	private double limit(double u, double umin, double umax) {
-		if (u < umin) {
-			u = umin;
-		} else if (u > umax) {
-			u = umax;
-		}
-		return u;
-	}  
+  private double limit(double u, double umin, double umax) {
+    if (u < umin) {
+      u = umin;
+    } else if (u > umax) {
+      u = umax;
+    }
+    return u;
+  }
 
   public void shutDown() {
     System.out.println("shuting down");
@@ -47,13 +47,13 @@ public class Regul extends Thread {
   public void run() {
     long duration;
     long t = System.currentTimeMillis();
-    
+
     while (true) {
       // Read inputs
       double penAngle = sim.getThetaAngle();
       double armAngle = sim.getPhiAngle();
 
-      switch ("UPPER" /*gui.getMode()*/) {
+      switch ("UPPER" /* gui.getMode() */) {
         case "OFF": {
           sim.setControlSignal(0);
           break;
@@ -73,7 +73,6 @@ public class Regul extends Thread {
       }
 
       sim.setControlSignal(u);
-      
 
       // sleep
       t = t + controller.getHMillis();
@@ -81,7 +80,8 @@ public class Regul extends Thread {
       if (duration > 0) {
         try {
           sleep(duration);
-        } catch (InterruptedException x) {}
+        } catch (InterruptedException x) {
+        }
       } else {
         System.out.println("Lagging behind...");
       }
