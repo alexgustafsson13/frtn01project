@@ -10,6 +10,10 @@ public class Main {
 
     Parameters param = new Parameters();
     RefParameters refparam = new RefParameters();
+
+    //Set param and refparam
+    param.k1 = 1;
+
     GUI gui = new GUI(param, refparam, regul);
     gui.initializeGUI();
     gui.run();

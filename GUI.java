@@ -185,6 +185,7 @@ public class GUI {
 		group.add(offModeButton);
 		group.add(lowerModeButton);
 		group.add(upperModeButton);
+        offModeButton.setSelected(true);
 		// Button action listeners.
 		offModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -261,6 +262,7 @@ public class GUI {
 	}
 
     public void run() {
+        regul.setMode(Mode.OFF);
         regul.start();
         //ctrlPanel.start();
         //measPanel.start();
