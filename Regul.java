@@ -11,8 +11,9 @@ public class Regul extends Thread {
   private Parameters param;
   private RefParameters refparam;
   private Boolean running;
+  private GUI gui;
 
-  public Regul(Control c, /* GUI g, */ SimFurutaPendulum s) {
+  public Regul(Control c, SimFurutaPendulum s) {
     this.controller = c;
     // this.gui = g;
     this.sim = s;
@@ -89,5 +90,9 @@ public class Regul extends Thread {
         System.out.println("Lagging behind...");
       }
     }
+  }
+
+  public void setGUI(GUI gui) {
+    this.gui = gui;
   }
 }

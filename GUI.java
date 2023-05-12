@@ -21,6 +21,7 @@ public class GUI {
         this.param = param;
         this.refparam = refparam;
         this.regul = regul;
+        this.regul.setGUI(this);
     }
 
 	// Declarartion of main frame.
@@ -163,12 +164,17 @@ public class GUI {
 		});
 
 		// Create panel with border to hold apply button and parameter panel
-		BoxPanel innerParButtonPanel = new BoxPanel(BoxPanel.VERTICAL);
-		innerParButtonPanel.setBorder(BorderFactory.createTitledBorder("Inner Parameters"));
-		innerParButtonPanel.addFixed(10);
-		innerParButtonPanel.add(parPanel);
-		innerParButtonPanel.addFixed(10);
-		innerParButtonPanel.add(applyButton);
+		BoxPanel parButtonPanel = new BoxPanel(BoxPanel.VERTICAL);
+		parButtonPanel.setBorder(BorderFactory.createTitledBorder("Inner Parameters"));
+		parButtonPanel.addFixed(10);
+		parButtonPanel.add(parPanel);
+		parButtonPanel.addFixed(10);
+		parButtonPanel.add(applyButton);
+
+        // Create panel for parameter fields, labels and apply buttons
+		parPanel = new BoxPanel(BoxPanel.HORIZONTAL);
+		parPanel.add(parButtonPanel);
+
 
 		// Create panel for the radio buttons.
 		buttonPanel = new JPanel();
@@ -198,6 +204,8 @@ public class GUI {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -229,8 +237,8 @@ public class GUI {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				regul.shutDown();
-				measPanel.stopThread();
-				ctrlPanel.stopThread();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -250,5 +258,29 @@ public class GUI {
 		frame.setVisible(true);
 		
 		isInitialized = true;
+	}
+
+    public void run() {
+        regul.start();
+        ctrlPanel.start();
+        measPanel.start();
+    }
+
+    /** Called by Regul to plot a control signal data point. */
+	public synchronized void putControlData(double t, double u) {
+		if (isInitialized) {
+			ctrlPanel.putData(t, u);
+		} else {
+			System.out.println("Note: GUI not yet initialized. Ignoring call to putControlData().");
+		}
+	}
+
+	/** Called by Regul to plot a measurement data point. */
+	public synchronized void putMeasurementData(double t, double yRef, double y) {
+		if (isInitialized) {
+			measPanel.putData(t, yRef, y);
+		} else {
+			System.out.println("Note: GUI not yet initialized. Ignoring call to putMeasurementData().");
+		}
 	}
 }
