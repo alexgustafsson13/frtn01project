@@ -21,6 +21,7 @@ public class GUI {
         this.param = param;
         this.refparam = refparam;
         this.regul = regul;
+        this.regul.setGUI(this);
     }
 
 	// Declarartion of main frame.
@@ -198,6 +199,8 @@ public class GUI {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -229,8 +232,8 @@ public class GUI {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				regul.shutDown();
-				measPanel.stopThread();
-				ctrlPanel.stopThread();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -250,5 +253,29 @@ public class GUI {
 		frame.setVisible(true);
 		
 		isInitialized = true;
+	}
+
+    public void run() {
+        regul.start();
+        ctrlPanel.start();
+        measPanel.start();
+    }
+
+    /** Called by Regul to plot a control signal data point. */
+	public synchronized void putControlData(double t, double u) {
+		if (isInitialized) {
+			ctrlPanel.putData(t, u);
+		} else {
+			System.out.println("Note: GUI not yet initialized. Ignoring call to putControlData().");
+		}
+	}
+
+	/** Called by Regul to plot a measurement data point. */
+	public synchronized void putMeasurementData(double t, double yRef, double y) {
+		if (isInitialized) {
+			measPanel.putData(t, yRef, y);
+		} else {
+			System.out.println("Note: GUI not yet initialized. Ignoring call to putMeasurementData().");
+		}
 	}
 }

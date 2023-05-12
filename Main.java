@@ -12,8 +12,6 @@ public class Main {
     RefParameters refparam = new RefParameters();
     GUI gui = new GUI(param, refparam, regul);
     gui.initializeGUI();
-
-    //gui.start();
-    regul.start();
+    gui.run();
   }
 }
