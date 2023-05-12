@@ -15,8 +15,6 @@ public class GUI {
     private int priority;
     private Parameters param;
     private RefParameters refparam;
-    private float ref;
-    private Mode mode;
     private Regul regul;
 
     public GUI(Parameters param, RefParameters refparam, Regul regul) {
@@ -81,6 +79,8 @@ public class GUI {
 		parLabelPanel.add(new JLabel("Phi1: "));
 		parLabelPanel.add(new JLabel("Phi2: "));
 		parLabelPanel.add(new JLabel("PhiSpeed: "));
+		parLabelPanel.add(new JLabel("RefPhi1: "));
+		parLabelPanel.add(new JLabel("RefPhi2: "));
 		parFieldPanel = new JPanel();
 		parFieldPanel.setLayout(new GridLayout(0,1));
         parFieldPanel.add(parK1Field);
@@ -198,8 +198,6 @@ public class GUI {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
-				measPanel.stopThread();
-				ctrlPanel.stopThread();
 				System.exit(0);
 			}
 		});

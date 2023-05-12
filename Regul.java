@@ -10,6 +10,7 @@ public class Regul extends Thread {
   private double uMax = 1.0;
   private Parameters param;
   private RefParameters refparam;
+  private Boolean running;
 
   public Regul(Control c, /* GUI g, */ SimFurutaPendulum s) {
     this.controller = c;
@@ -20,7 +21,7 @@ public class Regul extends Thread {
 
   public void setParameters(Parameters param) {
     this.param = (Parameters) param.clone();
-    c.updateParams(this.param);
+    controller.updateParams(this.param);
   }
 
   public void setRefParameters(RefParameters refparam) {
@@ -41,14 +42,16 @@ public class Regul extends Thread {
   }
 
   public void shutDown() {
+    running = false;
     System.out.println("shuting down");
   }
 
   public void run() {
+    running = true;
     long duration;
     long t = System.currentTimeMillis();
 
-    while (true) {
+    while (running) {
       // Read inputs
       double penAngle = sim.getThetaAngle();
       double armAngle = sim.getPhiAngle();

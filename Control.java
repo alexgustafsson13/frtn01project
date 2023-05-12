@@ -16,6 +16,8 @@ public class Control {
   private double k1 = 0;
   private double k2 = 0;
 
+  private double u;
+
   public Control() {
     this.sampleTime = 0.05;
     // set parameters here
