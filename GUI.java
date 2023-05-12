@@ -204,8 +204,8 @@ public class GUI {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
-                ctrlPanel.stopThread();
-                measPanel.stopThread();
+                //ctrlPanel.stopThread();
+                //measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -237,8 +237,8 @@ public class GUI {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				regul.shutDown();
-                ctrlPanel.stopThread();
-                measPanel.stopThread();
+                //ctrlPanel.stopThread();
+                //measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -262,8 +262,8 @@ public class GUI {
 
     public void run() {
         regul.start();
-        ctrlPanel.start();
-        measPanel.start();
+        //ctrlPanel.start();
+        //measPanel.start();
     }
 
     /** Called by Regul to plot a control signal data point. */
