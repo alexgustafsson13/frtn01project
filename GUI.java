@@ -164,12 +164,17 @@ public class GUI {
 		});
 
 		// Create panel with border to hold apply button and parameter panel
-		BoxPanel innerParButtonPanel = new BoxPanel(BoxPanel.VERTICAL);
-		innerParButtonPanel.setBorder(BorderFactory.createTitledBorder("Inner Parameters"));
-		innerParButtonPanel.addFixed(10);
-		innerParButtonPanel.add(parPanel);
-		innerParButtonPanel.addFixed(10);
-		innerParButtonPanel.add(applyButton);
+		BoxPanel parButtonPanel = new BoxPanel(BoxPanel.VERTICAL);
+		parButtonPanel.setBorder(BorderFactory.createTitledBorder("Inner Parameters"));
+		parButtonPanel.addFixed(10);
+		parButtonPanel.add(parPanel);
+		parButtonPanel.addFixed(10);
+		parButtonPanel.add(applyButton);
+
+        // Create panel for parameter fields, labels and apply buttons
+		parPanel = new BoxPanel(BoxPanel.HORIZONTAL);
+		parPanel.add(parButtonPanel);
+
 
 		// Create panel for the radio buttons.
 		buttonPanel = new JPanel();
