@@ -46,7 +46,7 @@ public class GUI {
 	private JRadioButton offModeButton = new JRadioButton("Off");
 	private JRadioButton upperModeButton = new JRadioButton("Upper");
 	private JRadioButton lowerModeButton = new JRadioButton("Lower");
-	private JButton stopButton = new JButton("STOP");
+	private JButton quitButton = new JButton("QUIT");
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
@@ -74,14 +74,14 @@ public class GUI {
 		// Create panels for the parameter fields and labels, add labels and fields 
 		parPanel = new BoxPanel(BoxPanel.HORIZONTAL);
 		parLabelPanel = new JPanel();
-		parLabelPanel.add(new JLabel("K1: "));
+		parLabelPanel.add(new JLabel("K1(Swingup): "));
 		parLabelPanel.setLayout(new GridLayout(0,1));
-		parLabelPanel.add(new JLabel("K2: "));
-		parLabelPanel.add(new JLabel("Phi1: "));
-		parLabelPanel.add(new JLabel("Phi2: "));
-		parLabelPanel.add(new JLabel("PhiSpeed: "));
-		parLabelPanel.add(new JLabel("RefPhi1: "));
-		parLabelPanel.add(new JLabel("RefPhi2: "));
+		parLabelPanel.add(new JLabel("K2(Swingup): "));
+		parLabelPanel.add(new JLabel("Phi1(Threshold): "));
+		parLabelPanel.add(new JLabel("Phi2(Threshold): "));
+		parLabelPanel.add(new JLabel("PhiSpeed(Angular velocity): "));
+		parLabelPanel.add(new JLabel("RefPhi1(Lower): "));
+		parLabelPanel.add(new JLabel("RefPhi2(Upper): "));
 		parFieldPanel = new JPanel();
 		parFieldPanel.setLayout(new GridLayout(0,1));
         parFieldPanel.add(parK1Field);
@@ -185,6 +185,7 @@ public class GUI {
 		group.add(offModeButton);
 		group.add(lowerModeButton);
 		group.add(upperModeButton);
+        offModeButton.setSelected(true);
 		// Button action listeners.
 		offModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -201,11 +202,11 @@ public class GUI {
                 regul.setMode(Mode.UPPER);
 			}
 		});
-		stopButton.addActionListener(new ActionListener() {
+		quitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
-                ctrlPanel.stopThread();
-                measPanel.stopThread();
+                //ctrlPanel.stopThread();
+                //measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -225,7 +226,7 @@ public class GUI {
 		leftPanel = new JPanel();
 		leftPanel.setLayout(new BorderLayout());
 		leftPanel.add(somePanel, BorderLayout.CENTER);
-		leftPanel.add(stopButton, BorderLayout.SOUTH);
+		leftPanel.add(quitButton, BorderLayout.SOUTH);
 
 		// Create panel for the entire GUI.
 		guiPanel = new BoxPanel(BoxPanel.HORIZONTAL);
@@ -237,8 +238,8 @@ public class GUI {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				regul.shutDown();
-                ctrlPanel.stopThread();
-                measPanel.stopThread();
+                //ctrlPanel.stopThread();
+                //measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -261,9 +262,10 @@ public class GUI {
 	}
 
     public void run() {
+        regul.setMode(Mode.OFF);
         regul.start();
-        ctrlPanel.start();
-        measPanel.start();
+        //ctrlPanel.start();
+        //measPanel.start();
     }
 
     /** Called by Regul to plot a control signal data point. */
