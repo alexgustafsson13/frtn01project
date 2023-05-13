@@ -76,7 +76,7 @@ public class Control {
     deltaPhi = armAngle - oldPhi;
 
     if (Math.abs(penError) < 0.5 && Math.abs(deltaTheta) < 1) {
-      System.out.println(penError + " " + armError);
+      
       u = -(penError * 6.236 + deltaTheta * 1.139 + armError * 0.1238 + deltaPhi * 0.2150);
     } else {
       u = k1 * Math.signum(
