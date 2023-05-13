@@ -1,9 +1,8 @@
 public class Regul extends Thread {
 
   private Control controller;
-  // private GUI gui;
   private SimFurutaPendulum sim;
-  private Mode mode = Mode.OFF; // "OFF", "UPPER" eller "LOWER" best at det skickas direkt från gui
+  private Mode mode = Mode.OFF; // "OFF", "UPPER" eller "LOWER"
 
   private double u = 0;
   private double uMin = -1.0;
@@ -59,7 +58,7 @@ public class Regul extends Thread {
 
       switch (mode) {
         case OFF: {
-          sim.setControlSignal(0);
+          u = 0;
           break;
         }
         case UPPER: {

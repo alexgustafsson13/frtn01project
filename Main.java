@@ -1,9 +1,8 @@
 
 public class Main {
   public static void main(String[] args) {
-    //start sim
-    SimFurutaPendulum sim = new SimFurutaPendulum(0.0, 0.0);
-
+    // start sim
+    SimFurutaPendulum sim = new SimFurutaPendulum(3.14, 0.0);
 
     Control controller = new Control();
     Regul regul = new Regul(controller, sim);

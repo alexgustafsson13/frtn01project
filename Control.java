@@ -19,7 +19,7 @@ public class Control {
   private double u;
 
   public Control() {
-    this.sampleTime = 0.05;
+    this.sampleTime = 0.004;
     // set parameters here
   }
 
@@ -44,16 +44,18 @@ public class Control {
     if (armError > pi) {
       armError = armError - 2 * pi;
     }
+    // Both errors should be between [-pi, pi]
 
     deltaTheta = oldTheta - penAngle;
 
-    // Both errors should be between [-pi, pi]
+    
 
     if (Math.abs(penError) < 0.2 && Math.abs(deltaPhi) < 0.1) {
       u = 0.0; // math here
     } else {
       u = 0.0;
     }
+
     oldTheta = penAngle;
     return u;
   }
@@ -70,19 +72,17 @@ public class Control {
       armError = armError - 2 * pi;
     }
 
-    deltaTheta = oldTheta - penAngle;
-    deltaPhi = oldPhi - armAngle;
+    deltaTheta = penAngle - oldTheta;
+    deltaPhi = armAngle - oldPhi;
 
-    if (Math.abs(penError) < 0.2 && Math.abs(deltaPhi) < 0.1) {
-      u = 0.0; // math here
+    if (Math.abs(penError) < 0.5 && Math.abs(deltaTheta) < 1) {
+      System.out.println(penError + " " + armError);
+      u = -(penError * 6.236 + deltaTheta * 1.139 + armError * 0.1238 + deltaPhi * 0.2150);
     } else {
-      u = k1
-          * Math.signum(
-              (Math.cos(penAngle) + deltaTheta * deltaTheta / (6.7 * 6.7) - 1) * deltaTheta * Math.cos(penAngle))
+      u = k1 * Math.signum(
+          (Math.cos(penError) + ((deltaTheta * deltaTheta) / (2 * 6.7 * 6.7)) - 1) * deltaTheta * Math.cos(penError))
           - k2 * deltaPhi;
     }
-
-    // Both errors should be between [-pi, pi]
 
     oldPhi = armAngle;
     oldTheta = penAngle;
