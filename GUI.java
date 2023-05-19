@@ -135,13 +135,14 @@ public class GUI {
 		});
         parRefPhi1Field.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refparam.phi1 = parPhispeedField.getValue();
+				refparam.phi1 = parRefPhi1Field.getValue();
 				applyButton.setEnabled(true);
+				System.out.println(refparam.phi1);
 			}
 		});
         parRefPhi2Field.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refparam.phi2 = parPhispeedField.getValue();
+				refparam.phi2 = parRefPhi2Field.getValue();
 				applyButton.setEnabled(true);
 			}
 		});

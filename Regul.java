@@ -2,7 +2,7 @@ public class Regul extends Thread {
 
   private Control controller;
   private SimFurutaPendulum sim;
-  private Mode mode = Mode.OFF; // "OFF", "UPPER" eller "LOWER"
+  private Mode mode;
 
   private double u = 0;
   private double uMin = -1.0;
@@ -11,6 +11,7 @@ public class Regul extends Thread {
   private RefParameters refparam;
   private Boolean running;
   private GUI gui;
+  
 
   public Regul(Control c, SimFurutaPendulum s) {
     this.controller = c;
@@ -19,17 +20,19 @@ public class Regul extends Thread {
 
   }
 
-  public void setParameters(Parameters param) {
+  public synchronized void setParameters(Parameters param) {
     this.param = (Parameters) param.clone();
     controller.updateParams(this.param);
   }
 
-  public void setRefParameters(RefParameters refparam) {
+  public synchronized void setRefParameters(RefParameters refparam) {
     this.refparam = (RefParameters) refparam.clone();
+    controller.updateRefParams(this.refparam);
   }
 
-  public void setMode(Mode mode) {
+  public synchronized void setMode(Mode mode) {
     this.mode = mode;
+    controller.setStatusOff();
   }
 
   private double limit(double u, double umin, double umax) {

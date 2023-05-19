@@ -1,96 +1,140 @@
 public class Control {
   private double sampleTime; // in seconds
-  private double penError = 0;
-  private double armError = 0;
+  private double thetaError = 0;
+  private double phiError = 0;
 
-  private double armRef = 0;
-  private double penRef = 0;
+  private double phiRef = 0;
+  private double thetaRef = 0;
 
   private double oldTheta = 0;
-  private double deltaTheta = 0;
+  private double thetaDot = 0;
 
   private double oldPhi = 0;
-  private double deltaPhi = 0;
+  private double phiDot = 0;
 
   private double pi = 3.1415;
+  
   private double k1 = 0;
   private double k2 = 0;
 
-  private double u;
+  private double u = 0;
+
+  private Status status;
+
+  enum Status {
+    ON,
+    OFF,
+    SWINGUP
+}
 
   public Control() {
-    this.sampleTime = 0.004;
-    // set parameters here
+    this.sampleTime = 0.05;
+    this.status = Status.OFF;
   }
 
   public synchronized void updateParams(Parameters param) {
-    this.k1 = param.k1;
-    this.k2 = param.k2;
+    this.k1 = param.k1; 
+    this.k2 = param.k2; 
   }
 
   public synchronized void updateRefParams(RefParameters refParam) {
-    this.armRef = refParam.phi1;
-    this.penRef = refParam.phi2;
+    this.phiRef = refParam.phi1;
+    System.out.println("test" + this.phiRef);
   }
 
-  public synchronized double lowerCalculate(double penAngle, double armAngle) {
-    penRef = pi;
-    penError = (penRef - penAngle) % (2 * pi);
-    if (penError > pi) {
-      penError = penError - 2 * pi;
+  private void errorCalculate(double theta, double phi) {
+    thetaError = (thetaRef - theta) % (2 * pi);
+    if  (thetaError > pi) {
+      thetaError =  thetaError - 2 * pi;
+    }
+    if (thetaError < -pi) {
+      thetaError =  thetaError + 2 * pi;
     }
 
-    this.armError = (armRef - armAngle) % (2 * pi);
-    if (armError > pi) {
-      armError = armError - 2 * pi;
+    phiError = (phiRef - phi) % (2 * pi);
+    if (phiError > pi) {
+      phiError = phiError - 2 * pi;
     }
-    // Both errors should be between [-pi, pi]
+    if (phiError < -pi) {
+      phiError =  phiError + 2 * pi;
+    }
+  }
 
-    deltaTheta = oldTheta - penAngle;
+  public synchronized void setStatusOff() {
+    this.status = Status.OFF;
+  }
 
-    
+  private void checkLowerStatus() {
+    if (Math.abs(thetaError) < 0.2 && Math.abs(thetaDot) < 2) {
+      this.status = Status.ON;
+    }
 
-    if (Math.abs(penError) < 0.2 && Math.abs(deltaPhi) < 0.1) {
-      u = 0.0; // math here
+    if (Math.abs(thetaError) > 1 && Math.abs(thetaDot) > 4) {
+      this.status = Status.OFF;
+    }
+  }
+
+  private void checkUpperStatus() {
+    if (Math.abs(thetaError) < 0.3 && Math.abs(thetaDot) < 1) {
+      this.status = Status.ON;
+    } else if (Math.abs(phiDot) < 0.5) {
+      this.status = Status.SWINGUP;
+    }
+
+    if (Math.abs(thetaError) > 0.5 && status != Status.SWINGUP) {
+      this.status = Status.OFF;
+    }
+  }
+
+  public synchronized double lowerCalculate(double theta, double phi) {
+    System.out.println(status);
+    thetaRef = pi;
+
+    errorCalculate(theta, phi);
+    checkLowerStatus();
+
+    thetaDot = (theta - oldTheta)/ sampleTime;
+    phiDot = (phi - oldPhi)/ sampleTime;
+
+    if (status == Status.ON) {
+      u = (thetaError * 1.4259 + thetaDot * -0.0345 + phiError * 0.0835 + phiDot * -0.0858);
     } else {
-      u = 0.0;
+      u = 0;
     }
-
-    oldTheta = penAngle;
+    
+    oldPhi = phi;
+    oldTheta = theta;
     return u;
   }
 
-  public synchronized double upperCalculate(double penAngle, double armAngle) {
-    penRef = 0;
-    penError = (penRef - penAngle) % (2 * pi);
-    if (penError > pi) {
-      penError = penError - 2 * pi;
-    }
 
-    this.armError = (armRef - armAngle) % (2 * pi);
-    if (armError > pi) {
-      armError = armError - 2 * pi;
-    }
+  public synchronized double upperCalculate(double theta, double phi) {
+    thetaRef = 0;
 
-    deltaTheta = penAngle - oldTheta;
-    deltaPhi = armAngle - oldPhi;
+    errorCalculate(theta, phi);
+    checkUpperStatus();
 
-    if (Math.abs(penError) < 0.5 && Math.abs(deltaTheta) < 1) {
-      
-      u = -(penError * 6.236 + deltaTheta * 1.139 + armError * 0.1238 + deltaPhi * 0.2150);
-    } else {
+    thetaDot = (theta - oldTheta)/ sampleTime;
+    phiDot = (phi - oldPhi)/ sampleTime;
+
+    if (status == Status.ON) {
+      System.out.println("controlling");
+      u = -(thetaError * 2.7199 + thetaDot * -0.5069 + phiError * 0.0824 + phiDot * -0.0847);
+    } else if (status == Status.SWINGUP) {
       u = k1 * Math.signum(
-          (Math.cos(penError) + ((deltaTheta * deltaTheta) / (2 * 6.7 * 6.7)) - 1) * deltaTheta * Math.cos(penError))
-          - k2 * deltaPhi;
+          (Math.cos(thetaError) + ((thetaDot * thetaDot) / (2 * 6.7 * 6.7)) - 1) * thetaDot * Math.cos(thetaError))
+          - k2 * phiDot;
+    } else {
+      u = 0;
     }
 
-    oldPhi = armAngle;
-    oldTheta = penAngle;
+    oldPhi = phi;
+    oldTheta = theta;
     return u;
   }
 
   public synchronized void setArmRef(double angle) {
-    this.armRef = angle;
+    this.phiRef = angle;
   }
 
   public synchronized long getHMillis() {
