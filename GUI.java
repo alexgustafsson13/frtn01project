@@ -58,13 +58,15 @@ public class GUI {
 		plotterPanel = new BoxPanel(BoxPanel.VERTICAL);
 		// Create PlotterPanels.
 		measPanel = new PlotterPanel(3, plotterPriority);
-		measPanel.setYAxis(20.0, -10.0, 2, 2);
+		measPanel.setYAxis(20, -10, 2, 2);
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
 		measPanel.setColor(1, java.awt.Color.blue);
 		measPanel.setColor(2, java.awt.Color.red);
+		measPanel.setColor(3, java.awt.Color.green);
+		measPanel.setTitle("PhiRef(blue) - Arm angle (red) - Pendulum angle (green)");
 		ctrlPanel = new PlotterPanel(1, plotterPriority);
-		ctrlPanel.setYAxis(4, -2, 2, 2);
+		ctrlPanel.setYAxis(1, -0.5, 2, 2);
 		ctrlPanel.setXAxis(10, 5, 5);
 		ctrlPanel.setUpdateFreq(10);
 		ctrlPanel.setTitle("Control Signal");
