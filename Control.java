@@ -28,7 +28,7 @@ public class Control {
 }
 
   public Control() {
-    this.sampleTime = 0.05;
+    this.sampleTime = 0.1;
     this.status = Status.OFF;
   }
 
@@ -79,6 +79,7 @@ public class Control {
       this.status = Status.ON;
     } else if (Math.abs(phiDot) < 0.5) {
       this.status = Status.SWINGUP;
+    } else {
     }
 
     if (Math.abs(thetaError) > 0.5 && status != Status.SWINGUP) {
@@ -119,7 +120,7 @@ public class Control {
 
     if (status == Status.ON) {
       System.out.println("controlling");
-      u = -(thetaError * 2.7199 + thetaDot * -0.5069 + phiError * 0.0824 + phiDot * -0.0847);
+      u = -(thetaError * 1.7436 + thetaDot * -0.3221 + phiError * 0.0415 + phiDot * -0.0448);
     } else if (status == Status.SWINGUP) {
       u = k1 * Math.signum(
           (Math.cos(thetaError) + ((thetaDot * thetaDot) / (2 * 6.7 * 6.7)) - 1) * thetaDot * Math.cos(thetaError))
