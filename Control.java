@@ -14,7 +14,7 @@ public class Control {
 
   private double pi = 3.1415;
   
-  private Parameters param;
+  public Parameters param;
 
   private double u = 0;
 

@@ -1,6 +1,6 @@
 public class Regul extends Thread {
 
-  private Control controller;
+  public Control controller;
   private SimFurutaPendulum sim;
   private Mode mode;
 
@@ -93,9 +93,9 @@ public class Regul extends Thread {
 
   private void putDataInGUI(double armAngle, double penAngle, double ctrlSignal) {
     double timestamp = (double) (System.currentTimeMillis() - startTime) / 1000.0;
-      gui.putMeasurementData(timestamp, armAngle, penAngle);
-      gui.putControlData(timestamp, ctrlSignal);
-			System.out.println("Time: " + timestamp + "\nArm: " + armAngle + "\nPen: " + penAngle + "\nCtrl: " + ctrlSignal);
+    System.out.println("Time: " + timestamp + "\nArm: " + armAngle + "\nPen: " + penAngle + "\nCtrl: " + ctrlSignal);
+    gui.putMeasurementData(timestamp, armAngle, penAngle);
+    gui.putControlData(timestamp, ctrlSignal);
   }
 
   public void setGUI(GUI gui) {

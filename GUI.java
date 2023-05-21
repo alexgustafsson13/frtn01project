@@ -15,11 +15,13 @@ public class GUI {
     private int plotterPriority = 5;
     private Parameters param;
     private Regul regul;
+	private double phiRef = 0;
 
     public GUI(Parameters param, Regul regul) {
         this.param = param;
         this.regul = regul;
         this.regul.setGUI(this);
+		
     }
 
 	// Declarartion of main frame.
@@ -55,14 +57,17 @@ public class GUI {
 		// Create a panel for the two plotters.
 		plotterPanel = new BoxPanel(BoxPanel.VERTICAL);
 		// Create PlotterPanels.
-		measPanel = new PlotterPanel(2, plotterPriority);
+		measPanel = new PlotterPanel(3, plotterPriority);
 		measPanel.setYAxis(20.0, -10.0, 2, 2);
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
+		measPanel.setColor(1, java.awt.Color.blue);
+		measPanel.setColor(2, java.awt.Color.red);
 		ctrlPanel = new PlotterPanel(1, plotterPriority);
-		ctrlPanel.setYAxis(20.0, -10.0, 2, 2);
+		ctrlPanel.setYAxis(4, -2, 2, 2);
 		ctrlPanel.setXAxis(10, 5, 5);
 		ctrlPanel.setUpdateFreq(10);
+		ctrlPanel.setTitle("Control Signal");
 
 		plotterPanel.add(measPanel);
 		plotterPanel.addFixed(10);
@@ -270,7 +275,7 @@ public class GUI {
 	/** Called by Regul to plot a measurement data point. */
 	public synchronized void putMeasurementData(double t, double arm, double pen) {
 		if (isInitialized) {
-			measPanel.putData(t, arm, pen);
+			measPanel.putData(t, param.phiRef, arm, pen);
 		} else {
 			System.out.println("Note: GUI not yet initialized. Ignoring call to putMeasurementData().");
 		}
