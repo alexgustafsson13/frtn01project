@@ -1,5 +1,5 @@
 public class Parameters implements Cloneable {
-	public double k1, k2, phi1, phi2, phispeed;
+	public double k1, k2, phiRef, thetaThresh, phiDot, thetaDot;
 	
 	public Object clone() {
 		try {

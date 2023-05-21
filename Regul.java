@@ -8,9 +8,9 @@ public class Regul extends Thread {
   private double uMin = -1.0;
   private double uMax = 1.0;
   private Parameters param;
-  private RefParameters refparam;
   private Boolean running;
   private GUI gui;
+  private long startTime;
   
 
   public Regul(Control c, SimFurutaPendulum s) {
@@ -23,11 +23,6 @@ public class Regul extends Thread {
   public synchronized void setParameters(Parameters param) {
     this.param = (Parameters) param.clone();
     controller.updateParams(this.param);
-  }
-
-  public synchronized void setRefParameters(RefParameters refparam) {
-    this.refparam = (RefParameters) refparam.clone();
-    controller.updateRefParams(this.refparam);
   }
 
   public synchronized void setMode(Mode mode) {
@@ -52,6 +47,7 @@ public class Regul extends Thread {
   public void run() {
     running = true;
     long duration;
+    startTime = System.currentTimeMillis();
     long t = System.currentTimeMillis();
 
     while (running) {
@@ -79,6 +75,7 @@ public class Regul extends Thread {
       }
 
       sim.setControlSignal(u);
+      putDataInGUI(armAngle, penAngle, u);
 
       // sleep
       t = t + controller.getHMillis();
@@ -92,6 +89,13 @@ public class Regul extends Thread {
         System.out.println("Lagging behind...");
       }
     }
+  }
+
+  private void putDataInGUI(double armAngle, double penAngle, double ctrlSignal) {
+    double timestamp = (double) (System.currentTimeMillis() - startTime) / 1000.0;
+      gui.putMeasurementData(timestamp, armAngle, penAngle);
+      gui.putControlData(timestamp, ctrlSignal);
+			System.out.println("Time: " + timestamp + "\nArm: " + armAngle + "\nPen: " + penAngle + "\nCtrl: " + ctrlSignal);
   }
 
   public void setGUI(GUI gui) {
