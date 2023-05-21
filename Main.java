@@ -8,15 +8,16 @@ public class Main {
     Regul regul = new Regul(controller, sim);
 
     Parameters param = new Parameters();
-    RefParameters refparam = new RefParameters();
 
     //Set param and refparam
     param.k1 = 0.1;
     param.k2 = 0.01;
-    refparam.phi1 = 0;
-    refparam.phi2 = 0;
+    param.phiRef = 0;
+    param.thetaThresh = 0.2;
+    param.phiDot = 0.5;
+    param.thetaDot = 2;
 
-    GUI gui = new GUI(param, refparam, regul);
+    GUI gui = new GUI(param, regul);
     gui.initializeGUI();
     gui.run();
   }

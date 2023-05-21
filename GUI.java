@@ -12,16 +12,16 @@ enum Mode {
 
 public class GUI {
 
-    private int priority;
+    private int plotterPriority = 5;
     private Parameters param;
-    private RefParameters refparam;
     private Regul regul;
+	private double phiRef = 0;
 
-    public GUI(Parameters param, RefParameters refparam, Regul regul) {
+    public GUI(Parameters param, Regul regul) {
         this.param = param;
-        this.refparam = refparam;
         this.regul = regul;
         this.regul.setGUI(this);
+		
     }
 
 	// Declarartion of main frame.
@@ -36,11 +36,10 @@ public class GUI {
 
 	private DoubleField parK1Field = new DoubleField(5,3);
 	private DoubleField parK2Field = new DoubleField(5,3);
-	private DoubleField parPhi1Field = new DoubleField(5,3);
-	private DoubleField parPhi2Field = new DoubleField(5,3);
-	private DoubleField parPhispeedField = new DoubleField(5,3);
-	private DoubleField parRefPhi1Field = new DoubleField(5,3);
-	private DoubleField parRefPhi2Field = new DoubleField(5,3);
+	private DoubleField parPhiRefField = new DoubleField(5,3);
+	private DoubleField parThetaThreshField = new DoubleField(5,3);
+	private DoubleField parPhiDotField = new DoubleField(5,3);
+	private DoubleField parThetaDotField = new DoubleField(5,3);
 	private JButton applyButton;
 
 	private JRadioButton offModeButton = new JRadioButton("Off");
@@ -58,14 +57,19 @@ public class GUI {
 		// Create a panel for the two plotters.
 		plotterPanel = new BoxPanel(BoxPanel.VERTICAL);
 		// Create PlotterPanels.
-		measPanel = new PlotterPanel(2, priority);
-		measPanel.setYAxis(20.0, -10.0, 2, 2);
+		measPanel = new PlotterPanel(3, plotterPriority);
+		measPanel.setYAxis(20, -10, 2, 2);
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
-		ctrlPanel = new PlotterPanel(1, priority);
-		ctrlPanel.setYAxis(20.0, -10.0, 2, 2);
+		measPanel.setColor(1, java.awt.Color.blue);
+		measPanel.setColor(2, java.awt.Color.red);
+		measPanel.setColor(3, java.awt.Color.green);
+		measPanel.setTitle("PhiRef(blue) - Arm angle (red) - Pendulum angle (green)");
+		ctrlPanel = new PlotterPanel(1, plotterPriority);
+		ctrlPanel.setYAxis(2, -1, 2, 2);
 		ctrlPanel.setXAxis(10, 5, 5);
 		ctrlPanel.setUpdateFreq(10);
+		ctrlPanel.setTitle("Control Signal");
 
 		plotterPanel.add(measPanel);
 		plotterPanel.addFixed(10);
@@ -77,29 +81,27 @@ public class GUI {
 		parLabelPanel.add(new JLabel("K1(Swingup): "));
 		parLabelPanel.setLayout(new GridLayout(0,1));
 		parLabelPanel.add(new JLabel("K2(Swingup): "));
-		parLabelPanel.add(new JLabel("Phi1(Threshold): "));
-		parLabelPanel.add(new JLabel("Phi2(Threshold): "));
-		parLabelPanel.add(new JLabel("PhiSpeed(Angular velocity): "));
-		parLabelPanel.add(new JLabel("RefPhi1(Lower): "));
-		parLabelPanel.add(new JLabel("RefPhi2(Upper): "));
+		parLabelPanel.add(new JLabel("PhiRef: "));
+		parLabelPanel.add(new JLabel("Theta(Threshold): "));
+		parLabelPanel.add(new JLabel("PhiDot(Threshold): "));
+		parLabelPanel.add(new JLabel("ThetaDot(Threshold): "));
 		parFieldPanel = new JPanel();
 		parFieldPanel.setLayout(new GridLayout(0,1));
         parFieldPanel.add(parK1Field);
         parFieldPanel.add(parK2Field);
-        parFieldPanel.add(parPhi1Field);
-        parFieldPanel.add(parPhi2Field);
-        parFieldPanel.add(parPhispeedField);
-        parFieldPanel.add(parRefPhi1Field);
-        parFieldPanel.add(parRefPhi2Field); 
+        parFieldPanel.add(parPhiRefField);
+        parFieldPanel.add(parThetaThreshField);
+        parFieldPanel.add(parPhiDotField);
+        parFieldPanel.add(parThetaDotField);
 
 		// Set initial parameter values of the fields
 		parK1Field.setValue(param.k1);
 		parK2Field.setValue(param.k2);
-		parPhi1Field.setValue(param.phi1);
-		parPhi2Field.setValue(param.phi2);
-		parPhispeedField.setValue(param.phispeed);
-		parRefPhi1Field.setValue(refparam.phi1);
-		parRefPhi2Field.setValue(refparam.phi2);
+		parPhiRefField.setValue(param.phiRef);
+		parThetaThreshField.setValue(param.thetaThresh);
+		parPhiDotField.setValue(param.phiDot);
+		parThetaDotField.setValue(param.thetaDot);
+
         // Set minimum någonstans?
 
 		// Add action listeners to the fields
@@ -115,34 +117,27 @@ public class GUI {
 				applyButton.setEnabled(true);
 			}
 		});
-		parPhi1Field.addActionListener(new ActionListener() {
+		parPhiRefField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				param.phi1 = parPhi1Field.getValue();
+				param.phiRef = parPhiRefField.getValue();
 				applyButton.setEnabled(true);
 			}
 		});
-		parPhi2Field.addActionListener(new ActionListener() {
+		parThetaThreshField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				param.phi2 = parPhi2Field.getValue();
+				param.thetaThresh = parThetaThreshField.getValue();
 				applyButton.setEnabled(true);
 			}
 		});
-		parPhispeedField.addActionListener(new ActionListener() {
+		parPhiDotField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				param.phispeed = parPhispeedField.getValue();
+				param.phiDot = parPhiDotField.getValue();
 				applyButton.setEnabled(true);
 			}
 		});
-        parRefPhi1Field.addActionListener(new ActionListener() {
+        parThetaDotField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				refparam.phi1 = parRefPhi1Field.getValue();
-				applyButton.setEnabled(true);
-				System.out.println(refparam.phi1);
-			}
-		});
-        parRefPhi2Field.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				refparam.phi2 = parRefPhi2Field.getValue();
+				param.thetaDot = parThetaDotField.getValue();
 				applyButton.setEnabled(true);
 			}
 		});
@@ -159,14 +154,13 @@ public class GUI {
 		applyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.setParameters(param);
-				regul.setRefParameters(refparam);
 				applyButton.setEnabled(false);
 			}
 		});
 
 		// Create panel with border to hold apply button and parameter panel
 		BoxPanel parButtonPanel = new BoxPanel(BoxPanel.VERTICAL);
-		parButtonPanel.setBorder(BorderFactory.createTitledBorder("Inner Parameters"));
+		parButtonPanel.setBorder(BorderFactory.createTitledBorder("Parameters"));
 		parButtonPanel.addFixed(10);
 		parButtonPanel.add(parPanel);
 		parButtonPanel.addFixed(10);
@@ -206,8 +200,8 @@ public class GUI {
 		quitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
-                //ctrlPanel.stopThread();
-                //measPanel.stopThread();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -239,8 +233,8 @@ public class GUI {
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				regul.shutDown();
-                //ctrlPanel.stopThread();
-                //measPanel.stopThread();
+                ctrlPanel.stopThread();
+                measPanel.stopThread();
 				System.exit(0);
 			}
 		});
@@ -258,15 +252,17 @@ public class GUI {
 
 		// Make the window visible.
 		frame.setVisible(true);
+
+        measPanel.start();
+        ctrlPanel.start();
 		
 		isInitialized = true;
 	}
 
     public void run() {
         regul.setMode(Mode.OFF);
+		regul.setParameters(param);
         regul.start();
-        //ctrlPanel.start();
-        //measPanel.start();
     }
 
     /** Called by Regul to plot a control signal data point. */
@@ -279,9 +275,9 @@ public class GUI {
 	}
 
 	/** Called by Regul to plot a measurement data point. */
-	public synchronized void putMeasurementData(double t, double yRef, double y) {
+	public synchronized void putMeasurementData(double t, double arm, double pen) {
 		if (isInitialized) {
-			measPanel.putData(t, yRef, y);
+			measPanel.putData(t, param.phiRef, arm, pen);
 		} else {
 			System.out.println("Note: GUI not yet initialized. Ignoring call to putMeasurementData().");
 		}
