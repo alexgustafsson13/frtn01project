@@ -20,6 +20,7 @@ public class Control {
 
   private Status status;
 
+  //Enums used for internal reference.
   enum Status {
     ON,
     OFF,
@@ -31,11 +32,13 @@ public class Control {
     this.status = Status.OFF;
   }
 
+  //Updates the parameters.
   public synchronized void updateParams(Parameters param) {
     this.param = (Parameters) param.clone();
     this.phiRef = param.phiRef;
   }
 
+  //Calculates the error of theta and phi.
   private void errorCalculate(double theta, double phi) {
     thetaError = (thetaRef - theta) % (2 * pi);
     if  (thetaError > pi) {
@@ -54,10 +57,12 @@ public class Control {
     }
   }
 
+  //Tells the controller to switch off.
   public synchronized void setStatusOff() {
     this.status = Status.OFF;
   }
 
+  //Called when in lower mode to determine the controlsignal.
   private void checkLowerStatus() {
     if (Math.abs(thetaError) < param.thetaThresh && Math.abs(thetaDot) < param.thetaDot) {
       this.status = Status.ON;
@@ -68,6 +73,7 @@ public class Control {
     }
   }
 
+  //Called when in upper mode to determine the controlsignal.
   private void checkUpperStatus() {
     if (Math.abs(thetaError) < param.thetaThresh && Math.abs(thetaDot) < param.thetaDot) {
       this.status = Status.ON;
@@ -81,6 +87,8 @@ public class Control {
     }
   }
 
+
+  //Calculates the controlsignal when in Lower-Mode
   public synchronized double lowerCalculate(double theta, double phi) {
     System.out.println(status);
     thetaRef = pi;
@@ -103,6 +111,7 @@ public class Control {
   }
 
 
+  //Calculates the control-signal when in Upper-Mode
   public synchronized double upperCalculate(double theta, double phi) {
     thetaRef = 0;
 
@@ -128,10 +137,12 @@ public class Control {
     return u;
   }
 
+  //Sets the phi-reference for the arm.
   public synchronized void setArmRef(double angle) {
     this.phiRef = angle;
   }
 
+  //Returns the time.
   public synchronized long getHMillis() {
     return (long) (sampleTime * 1000);
   }

@@ -4,6 +4,8 @@ import java.awt.event.*;
 import se.lth.control.*;
 import se.lth.control.plot.*;
 
+//Modes used for controller
+
 enum Mode {
     UPPER,
     LOWER,
@@ -49,6 +51,8 @@ public class GUI {
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
+
+	//Initializes the GUI and starts the plotters.
 
     public void initializeGUI() {
 		// Create main frame.
@@ -101,8 +105,6 @@ public class GUI {
 		parThetaThreshField.setValue(param.thetaThresh);
 		parPhiDotField.setValue(param.phiDot);
 		parThetaDotField.setValue(param.thetaDot);
-
-        // Set minimum någonstans?
 
 		// Add action listeners to the fields
 		parK1Field.addActionListener(new ActionListener() {
@@ -259,6 +261,7 @@ public class GUI {
 		isInitialized = true;
 	}
 
+	//Starts the regul
     public void run() {
         regul.setMode(Mode.OFF);
 		regul.setParameters(param);
