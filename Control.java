@@ -12,7 +12,7 @@ public class Control {
   private double oldPhi = 0;
   private double phiDot = 0;
 
-  private double pi = 3.1415;
+  private double pi = Math.PI;
   
   public Parameters param;
 

@@ -66,7 +66,7 @@ public class GUI {
 		measPanel.setColor(3, java.awt.Color.green);
 		measPanel.setTitle("PhiRef(blue) - Arm angle (red) - Pendulum angle (green)");
 		ctrlPanel = new PlotterPanel(1, plotterPriority);
-		ctrlPanel.setYAxis(1, -0.5, 2, 2);
+		ctrlPanel.setYAxis(2, -1, 2, 2);
 		ctrlPanel.setXAxis(10, 5, 5);
 		ctrlPanel.setUpdateFreq(10);
 		ctrlPanel.setTitle("Control Signal");
