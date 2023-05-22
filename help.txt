@@ -1,0 +1,4 @@
+LIBRARYPATH=/opt/java/se.lth.control.realtime.Moberg/jre/lib/amd64:/opt/java/se.lth.control.io.UnixSocket/jre/lib/ext/UnixSocket.jar:/opt/java/se.lth.control.Regler/jre/lib/ext/Regler.jar:/opt/java/se.lth.control.realtime.Time/jre/lib/ext/Time.jar
+CLASSPATH=/opt/java/se.lth.control.realtime.Moberg/jre/lib/ext/Moberg.jar:/opt/java/se.lth.control.io.UnixSocket/jre/lib/ext/UnixSocket.jar:/opt/java/se.lth.control.Regler/jre/lib/ext/Regler.jar:/opt/java/se.lth.control.realtime.Time/jre/lib/ext/Time.jar
+javac -cp "${CLASSPATH}" *.java
+java -cp :"${CLASSPATH}" -Djava.library.path="${LIBRARYPATH}" Main

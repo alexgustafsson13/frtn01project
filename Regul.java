@@ -22,8 +22,9 @@ public class Regul extends Thread {
     this.controller = c;
     // this.gui = g;
     //this.sim = s;
-    //this.armAngle = new AnalogIn();
-    //this.penAngle = new AnalogIn(42);
+    this.armAngle = new AnalogIn(40);
+    this.penAngle = new AnalogIn(41);
+    this.output = new AnalogOut(40);
   }
 
   //Sets parameters and updates the controller accordingly.
@@ -100,7 +101,7 @@ public class Regul extends Thread {
             break;
           }
         }
-        
+      //System.out.println("U: "+u);
       output.set(u);
       } catch (IOChannelException e) {
         e.printStackTrace();;
@@ -127,7 +128,7 @@ public class Regul extends Thread {
   //Puts the data in the plotters
   private void putDataInGUI(double arm, double pen, double ctrlSignal) {
     double timestamp = (double) (System.currentTimeMillis() - startTime) / 1000.0;
-    System.out.println("Time: " + timestamp + "\nArm: " + arm + "\nPen: " + pen + "\nCtrl: " + ctrlSignal);
+    //System.out.println("Time: " + timestamp + "\nArm: " + arm + "\nPen: " + pen + "\nCtrl: " + ctrlSignal);
     gui.putMeasurementData(timestamp, arm, pen);
     gui.putControlData(timestamp, ctrlSignal);
   }

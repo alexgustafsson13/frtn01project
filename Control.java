@@ -1,3 +1,5 @@
+import se.lth.control.realtime.AnalogIn;
+
 public class Control {
   private double sampleTime; // in seconds
   private double thetaError = 0;
@@ -11,6 +13,9 @@ public class Control {
 
   private double oldPhi = 0;
   private double phiDot = 0;
+
+  private AnalogIn inPhiDot;
+  private AnalogIn inThetaDot;
 
   private double pi = Math.PI;
   
@@ -28,8 +33,14 @@ public class Control {
 }
 
   public Control() {
-    this.sampleTime = 0.05;
+    this.sampleTime = 0.004;
     this.status = Status.OFF;
+    try {
+      this.inPhiDot = new AnalogIn(42);
+      this.inThetaDot = new AnalogIn(43);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   //Updates the parameters.
@@ -64,7 +75,7 @@ public class Control {
 
   //Called when in lower mode to determine the controlsignal.
   private void checkLowerStatus() {
-    if (Math.abs(thetaError) < param.thetaThresh && Math.abs(thetaDot) < param.thetaDot) {
+    if (Math.abs(thetaError) < param.thetaThresh + 1 && Math.abs(thetaDot) < param.thetaDot + 3) {
       this.status = Status.ON;
     }
 
@@ -89,46 +100,60 @@ public class Control {
 
   //Calculates the controlsignal when in Lower-Mode
   public synchronized double lowerCalculate(double theta, double phi) {
-    thetaRef = pi;
+    thetaRef = 0;
 
     errorCalculate(theta, phi);
     checkLowerStatus();
 
-    thetaDot = (theta - oldTheta)/ sampleTime;
-    phiDot = (phi - oldPhi)/ sampleTime;
-
-    if (status == Status.ON) {
-      u = (thetaError * 1.4259 + thetaDot * -0.0345 + phiError * 0.0835 + phiDot * -0.0858);
+    try {
+      thetaDot = inThetaDot.get(); //(theta - oldTheta)/ sampleTime;
+      phiDot = inPhiDot.get(); //(phi - oldPhi)/ sampleTime;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if (status == Status.ON) { // 0.02 0.012 0.08 0.0020
+      u = (thetaError * 0.3 + thetaDot * -0.02 +  phiError * 0.07 + phiDot * -0.02);
     } else {
       u = 0;
     }
+    System.out.println("error:" + thetaError);
+    
+    //System.out.println("thetaDot: " + thetaDot);
+    //System.out.println("phiDot: " + phiDot);
+    //System.out.println("theta: " + thetaError);
+    //System.out.println("phi: " + phiError);
     
     oldPhi = phi;
     oldTheta = theta;
+    //System.out.println("u: " + u);
     return u;
   }
 
 
   //Calculates the control-signal when in Upper-Mode
   public synchronized double upperCalculate(double theta, double phi) {
-    thetaRef = 0;
+    thetaRef = Math.PI;
 
     errorCalculate(theta, phi);
     checkUpperStatus();
-
-    thetaDot = (theta - oldTheta)/ sampleTime;
-    phiDot = (phi - oldPhi)/ sampleTime;
+    try {
+      thetaDot = inThetaDot.get(); //(theta - oldTheta)/ sampleTime;
+      phiDot = inPhiDot.get(); //(phi - oldPhi)/ sampleTime;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
 
     if (status == Status.ON) {
-      u = -(thetaError * 2.7199 + thetaDot * -0.5069 + phiError * 0.0824 + phiDot * -0.0847);
+      u = -(thetaError * 0.65 + thetaDot * -0.045 +  phiError * 0.05 + phiDot * -0.03);
     } else if (status == Status.SWINGUP) {
       u = param.k1 * Math.signum(
-          (Math.cos(thetaError) + ((thetaDot * thetaDot) / (2 * 6.7 * 6.7)) - 1) * thetaDot * Math.cos(thetaError))
+          (Math.cos(thetaError+Math.PI) + ((thetaDot * thetaDot) / (5 * 6.7 * 6.7)) - 1) * thetaDot * Math.cos(thetaError+Math.PI))
           - param.k2 * phiDot;
     } else {
       u = 0;
     }
-
+    System.out.println("error:" + thetaError);
     oldPhi = phi;
     oldTheta = theta;
     return u;

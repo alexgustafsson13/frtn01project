@@ -23,10 +23,10 @@ public class Main {
 
     Parameters param = new Parameters();
     //Set initial parameters
-    param.k1 = 0.1;
+    param.k1 = 0.11;
     param.k2 = 0.01;
     param.phiRef = 0;
-    param.thetaThresh = 0.15;
+    param.thetaThresh = 0.40;
     param.phiDot = 0.5;
     param.thetaDot = 1.5;
 
