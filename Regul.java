@@ -41,6 +41,19 @@ public class Regul extends Thread {
     }
     return u;
   }
+
+  // Gives a number in modulo 2pi between -pi and pi
+  private double bound(double x) {
+    x = x % (2*Math.PI);
+    if  (x > Math.PI) {
+      x =  x - 2 * Math.PI;
+    }
+    if (x < -Math.PI) {
+      x =  x + 2 * Math.PI;
+    }
+    return x;
+  }
+
   //Stops the while-loop running the regul.
   public void shutDown() {
     running = false;
@@ -100,7 +113,7 @@ public class Regul extends Thread {
   private void putDataInGUI(double armAngle, double penAngle, double ctrlSignal) {
     double timestamp = (double) (System.currentTimeMillis() - startTime) / 1000.0;
     System.out.println("Time: " + timestamp + "\nArm: " + armAngle + "\nPen: " + penAngle + "\nCtrl: " + ctrlSignal);
-    gui.putMeasurementData(timestamp, armAngle, penAngle);
+    gui.putMeasurementData(timestamp, bound(armAngle), bound(penAngle - 0.1), bound(param.phiRef));
     gui.putControlData(timestamp, ctrlSignal);
   }
 

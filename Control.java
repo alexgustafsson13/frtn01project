@@ -90,7 +90,6 @@ public class Control {
 
   //Calculates the controlsignal when in Lower-Mode
   public synchronized double lowerCalculate(double theta, double phi) {
-    System.out.println(status);
     thetaRef = pi;
 
     errorCalculate(theta, phi);
@@ -122,7 +121,6 @@ public class Control {
     phiDot = (phi - oldPhi)/ sampleTime;
 
     if (status == Status.ON) {
-      System.out.println("controlling");
       u = -(thetaError * 2.7199 + thetaDot * -0.5069 + phiError * 0.0824 + phiDot * -0.0847);
     } else if (status == Status.SWINGUP) {
       u = param.k1 * Math.signum(

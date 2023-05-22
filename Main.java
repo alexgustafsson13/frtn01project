@@ -17,7 +17,7 @@ public class Main {
     param.phiRef = 0;
     param.thetaThresh = 0.15;
     param.phiDot = 0.5;
-    param.thetaDot = 1.0;
+    param.thetaDot = 1.5;
 
     // creates a gui that in turn starts the plotter-threads and the regul-thread.
     GUI gui = new GUI(param, regul);
