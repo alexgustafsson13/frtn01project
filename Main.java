@@ -1,5 +1,8 @@
+import se.lth.control.realtime.IOChannelException;
 
 public class Main {
+
+  public static boolean init = false;
   public static void main(String[] args) {
     // start sim
     SimFurutaPendulum sim = new SimFurutaPendulum(3.14, 0.0);
@@ -7,11 +10,18 @@ public class Main {
     // creates a controller
     Control controller = new Control();
     // creates a regul with the controller and sim.
-    Regul regul = new Regul(controller, sim);
+    Regul regul = null;
+    try {
+      regul = new Regul(controller, sim);
+      init = true;
+    } catch (IOChannelException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
 
     Parameters param = new Parameters();
-    //Set parameters
+    //Set initial parameters
     param.k1 = 0.1;
     param.k2 = 0.01;
     param.phiRef = 0;
@@ -20,8 +30,10 @@ public class Main {
     param.thetaDot = 1.5;
 
     // creates a gui that in turn starts the plotter-threads and the regul-thread.
-    GUI gui = new GUI(param, regul);
-    gui.initializeGUI();
-    gui.run();
+    if (init) {
+      GUI gui = new GUI(param, regul);
+      gui.initializeGUI();
+      gui.run();
+    } else System.out.println("IOChannelException");
   }
 }

@@ -62,7 +62,11 @@ public class GUI {
 		plotterPanel = new BoxPanel(BoxPanel.VERTICAL);
 		// Create PlotterPanels.
 		measPanel = new PlotterPanel(3, plotterPriority);
+<<<<<<< Updated upstream
 		measPanel.setYAxis(6.3, -3.15, 2, 1);
+=======
+		measPanel.setYAxis(Math.PI*2, -Math.PI, 2, 2);
+>>>>>>> Stashed changes
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
 		measPanel.setColor(1, java.awt.Color.blue);
@@ -280,9 +284,17 @@ public class GUI {
 	/** Called by Regul to plot a measurement data point. */
 	public synchronized void putMeasurementData(double t, double arm, double pen, double ref) {
 		if (isInitialized) {
+<<<<<<< Updated upstream
 			measPanel.putData(t, ref, arm, pen);
+=======
+			measPanel.putData(t, centralize(param.phiRef) , centralize(arm), centralize(pen));
+>>>>>>> Stashed changes
 		} else {
 			System.out.println("Note: GUI not yet initialized. Ignoring call to putMeasurementData().");
 		}
+	}
+
+	private double centralize(double n) {
+		return n - (Math.round(n/Math.PI) * Math.PI);
 	}
 }
