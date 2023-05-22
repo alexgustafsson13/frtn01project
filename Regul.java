@@ -3,7 +3,6 @@ import se.lth.control.realtime.*;
 public class Regul extends Thread {
 
   public Control controller;
-  private SimFurutaPendulum sim;
   private Mode mode;
 
   private double u = 0;
@@ -19,13 +18,12 @@ public class Regul extends Thread {
   private AnalogOut output;
   
 
-  public Regul(Control c, SimFurutaPendulum s) throws IOChannelException {
+  public Regul(Control c) throws IOChannelException {
     this.controller = c;
     // this.gui = g;
-    this.sim = s;
-    this.armAngle = new AnalogIn(0);
-    this.penAngle = new AnalogIn(1);
-    this.output = new AnalogOut(0);
+    //this.sim = s;
+    //this.armAngle = new AnalogIn();
+    //this.penAngle = new AnalogIn(42);
   }
 
   //Sets parameters and updates the controller accordingly.
@@ -129,13 +127,8 @@ public class Regul extends Thread {
   //Puts the data in the plotters
   private void putDataInGUI(double arm, double pen, double ctrlSignal) {
     double timestamp = (double) (System.currentTimeMillis() - startTime) / 1000.0;
-<<<<<<< Updated upstream
-    System.out.println("Time: " + timestamp + "\nArm: " + armAngle + "\nPen: " + penAngle + "\nCtrl: " + ctrlSignal);
-    gui.putMeasurementData(timestamp, bound(armAngle), bound(penAngle - 0.1), bound(param.phiRef));
-=======
     System.out.println("Time: " + timestamp + "\nArm: " + arm + "\nPen: " + pen + "\nCtrl: " + ctrlSignal);
     gui.putMeasurementData(timestamp, arm, pen);
->>>>>>> Stashed changes
     gui.putControlData(timestamp, ctrlSignal);
   }
 
