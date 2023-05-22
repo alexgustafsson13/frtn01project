@@ -79,10 +79,9 @@ public class Control {
       this.status = Status.ON;
     } else if (Math.abs(phiDot) < param.phiDot) {
       this.status = Status.SWINGUP;
-    } else {
-    }
+    } 
 
-    if (Math.abs(thetaError) > 0.5 && status != Status.SWINGUP) {
+    if (Math.abs(thetaError) > (param.thetaThresh + 0.2) && status != Status.SWINGUP) {
       this.status = Status.OFF;
     }
   }
